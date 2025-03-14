@@ -20,6 +20,9 @@ jobs:
           cd server
           npm install
       - name: Run backend tests
+        env:
+          MONGO_URI: mongodb://localhost:27017/taskflow
+          JWT_SECRET: "code2025"
         run: |
           cd server
           npm test
