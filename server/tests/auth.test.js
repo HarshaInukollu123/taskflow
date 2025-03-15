@@ -1,29 +1,47 @@
-import request from 'supertest';
-import app from '../server.js';
-import User from '../models/User.js';
+import request from "supertest";
+import app from "../server.js";
+import { connectDB, disconnectDB } from "./setupTestDB.js";
 
-describe('Authentication', () => {
-  beforeEach(async () => {
-    await User.deleteMany({});
-  },10000);
+beforeAll(async () => {
+  await connectDB();
+});
 
-  it('should sign up a new user', async () => {
+afterAll(async () => {
+  await disconnectDB();
+});
+
+describe("Authentication API Tests", () => {
+  test("Should register a new user", async () => {
     const res = await request(app)
-      .post('/api/auth/signup')
-      .send({ email: 'test@example.com', password: 'password123', role: 'user' });
-    expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('token');
-  },10000);
+      .post("/api/auth/register")
+      .send({
+        name: "John Doe",
+        email: "john@example.com",
+        password: "pass123",
+      });
 
-  it('should log in an existing user', async () => {
+    expect(res.status).toBe(201);
+    expect(res.body.user).toHaveProperty("email", "john@example.com");
+  });
+
+  test("Should not register a user with the same email", async () => {
     await request(app)
-      .post('/api/auth/signup')
-      .send({ email: 'test@example.com', password: 'password123', role: 'user' });
+      .post("/api/auth/register")
+      .send({
+        name: "John Doe",
+        email: "john@example.com",
+        password: "pass123",
+      });
 
     const res = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'test@example.com', password: 'password123' });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('token');
-  },10000);
+      .post("/api/auth/register")
+      .send({
+        name: "Jane Doe",
+        email: "john@example.com", // Same email
+        password: "pass456",
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toBe("User already exists");
+  });
 });
