@@ -5,7 +5,7 @@ import {
   updateTask,
   deleteTask,
 } from "../controllers/taskController.js";
-import { protect } from "../middlewares/authMiddleware.js"; // Make sure auth middleware is set
+import { protect } from "../middleware/authMiddleware.js"; // Make sure auth middleware is set
 
 const router = express.Router();
 
