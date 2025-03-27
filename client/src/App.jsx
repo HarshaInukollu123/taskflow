@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./components/DashBoard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 
@@ -13,17 +15,29 @@ const App = () => {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <Router>
+    
+   <Router>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="container mx-auto px-4">
+      <div className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
         </Routes>
       </div>
       <Footer />
-    </Router>
+    </div>
+  </Router>
+   
   );
 };
 

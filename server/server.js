@@ -1,8 +1,8 @@
-import express, {json} from 'express';
-import { connect } from 'mongoose';
-import authRoutes from './routes/authRoutes';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -10,23 +10,37 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
-app.use(json());
+app.use(
+  cors({
+    origin: "http://localhost:5173", 
+    credentials: true,
+  })
+);
+app.use(express.json());
 
-app.use('/api/auth', authRoutes);
+// API Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/tasks", taskRoutes);
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Hello from TaskFlow backend!');
+// Root Route
+app.get("/", (req, res) => {
+  res.send("Hello from TaskFlow backend!");
 });
 
-// Start the server
-if (process.env.NODE_ENV !== "test") {
-    mongoose
-      .connect(process.env.MONGO_URI)
-      .then(() => console.log("MongoDB Connected"))
-      .catch((err) => console.log(err));
+// Database Connection Function
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB Connected`);
+  } catch (error) {
+    process.exit(1);
   }
+};
+
+// Start Server & Connect to DB (Only if NOT in Test Mode)
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
 
 export default app;
-
