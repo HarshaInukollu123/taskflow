@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../redux/thunks/authThunk.js";
 import { selectAuthLoading, selectAuthError } from "../redux/selectors/authSelector.js";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -12,6 +13,7 @@ const Register = () => {
     role: "user", // Default role
   });
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const loading = useSelector(selectAuthLoading);
   const error = useSelector(selectAuthError);
@@ -27,7 +29,14 @@ const Register = () => {
       return;
     }
     dispatch(registerUser(userData));
+    navigate("/login");
   };
+
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate("/dashboard");
+  //   }
+  // }, [user, navigate]);
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
