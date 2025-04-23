@@ -18,7 +18,7 @@ phases:
   build:
     commands:
       - echo "Building Docker image..."
-      - docker build -t myfirstapp-image:latest ./Docker/Dockerfile.txt
+      - docker build -t myfirstapp-image:latest ./Docker
       - docker tag myfirstapp-image:latest manidurga/myfirstapp-image:latest
 
   post_build:
