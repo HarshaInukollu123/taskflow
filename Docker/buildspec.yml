@@ -1,0 +1,36 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    DOCKER_USERNAME: dockerhub/credentials:DOCKER_USERNAME
+    DOCKER_PASSWORD: dockerhub/credentials:DOCKER_PASSWORD
+
+phases:
+  install:
+    commands:
+      - echo "Installing dependencies..."
+
+  pre_build:
+    commands:
+      - echo "Logging into Docker Hub..."
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t myfirstapp-image:latest ./Docker/Dockerfile.txt
+      - docker tag myfirstapp-image:latest manidurga/myfirstapp-image:latest
+
+  post_build:
+    commands:
+      - echo "Pushing Docker image to Docker Hub..."
+      - docker push manidurga/myfirstapp-image:latest
+      - echo "✅ Docker image pushed successfully!"
+
+artifacts:
+  files:
+    - '**/*'
+
+  
+  
+    
