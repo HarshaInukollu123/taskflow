@@ -1,42 +1,43 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../utils/axiosInstance';
+import * as taskAPI from '../../api/taskService';
 
 export const fetchTasks = createAsyncThunk('tasks/fetch', async (_, thunkAPI) => {
   try {
-    const res = await axiosInstance.get('/tasks');
+    const res = await taskAPI.getTasks();
     return res.data;
   } catch (err) {
-    return thunkAPI.rejectWithValue(err.response.data);
+    return thunkAPI.rejectWithValue(err.response?.data || err.message);
   }
 });
 
 export const createTask = createAsyncThunk('tasks/create', async (taskData, thunkAPI) => {
   try {
-    const res = await axiosInstance.post('/tasks', taskData);
+    const res = await taskAPI.createTask(taskData);
     return res.data;
   } catch (err) {
-    return thunkAPI.rejectWithValue(err.response.data);
+    return thunkAPI.rejectWithValue(err.response?.data || err.message);
   }
 });
 
 export const updateTask = createAsyncThunk('tasks/update', async ({ id, updates }, thunkAPI) => {
   try {
-    const res = await axiosInstance.put(`/tasks/${id}`, updates);
+    const res = await taskAPI.updateTask(id, updates);
     return res.data;
   } catch (err) {
-    return thunkAPI.rejectWithValue(err.response.data);
+    return thunkAPI.rejectWithValue(err.response?.data || err.message);
   }
 });
 
 export const deleteTask = createAsyncThunk('tasks/delete', async (id, thunkAPI) => {
   try {
-    await axiosInstance.delete(`/tasks/${id}`);
+    await taskAPI.deleteTask(id);
     return id;
   } catch (err) {
-    return thunkAPI.rejectWithValue(err.response.data);
+    return thunkAPI.rejectWithValue(err.response?.data || err.message);
   }
 });
 
+// Your slice code stays the same below
 const taskSlice = createSlice({
   name: 'tasks',
   initialState: {
@@ -71,6 +72,5 @@ const taskSlice = createSlice({
       });
   },
 });
-
 
 export default taskSlice.reducer;

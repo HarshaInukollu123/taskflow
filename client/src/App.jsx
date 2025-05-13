@@ -5,9 +5,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Dashboard from "./components/DashBoard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import TasksPage from "./pages/TaskPage";
 
 
 const App = () => {
@@ -28,7 +28,7 @@ const App = () => {
               path="/dashboard" 
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <TasksPage />
                 </ProtectedRoute>
               } 
             />
