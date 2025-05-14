@@ -10,12 +10,22 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+  "http://localhost:5173",                       
+  "https://taskflow-ten-gamma.vercel.app",       
+];
+
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://taskflow-ten-gamma.vercel.app'],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS not allowed"));
+    }
+  },
   credentials: true,
 }));
-app.use(express.json());
 
 // API Routes
 app.use("/api/auth", authRoutes);
