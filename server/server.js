@@ -39,33 +39,23 @@ app.get("/", (req, res) => {
   res.send("Hello from TaskFlow backend!");
 });
 
-// Connect to MongoDB and Start Server
-const connectDB = async () => {
+const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ MongoDB Connected");
 
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (err) {
-    console.error(" MongoDB Connection Error:", err);
+    console.error("❌ MongoDB Connection Error:", err);
     process.exit(1);
   }
 };
 
-connectDB(); 
+startServer(); 
 
-// Start Server & Connect to DB (Only if NOT in Test Mode)
-if (process.env.NODE_ENV !== "test") {
-  connectDB().then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  }).catch((err) => {
-    console.error("MongoDB connection failed:", err);
-  });
-}
+
 
 
 export default app;
