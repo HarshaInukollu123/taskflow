@@ -15,17 +15,18 @@ const allowedOrigins = [
   "https://taskflow-ten-gamma.vercel.app",       
 ];
 
-// Middleware
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("CORS not allowed"));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
 
 // API Routes
 app.use("/api/auth", authRoutes);
