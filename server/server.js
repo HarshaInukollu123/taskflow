@@ -51,8 +51,14 @@ const connectDB = async () => {
 
 // Start Server & Connect to DB (Only if NOT in Test Mode)
 if (process.env.NODE_ENV !== "test") {
-  connectDB();
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  }).catch((err) => {
+    console.error("MongoDB connection failed:", err);
+  });
 }
+
 
 export default app;
