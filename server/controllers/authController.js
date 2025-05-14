@@ -6,6 +6,10 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
 
@@ -17,9 +21,11 @@ export const registerUser = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
+    console.error("REGISTER ERROR:", error); 
+    res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
+
 
 
 export const loginUser = async (req, res) => {
