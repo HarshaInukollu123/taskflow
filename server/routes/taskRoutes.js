@@ -5,16 +5,21 @@ import {
   updateTask,
   deleteTask,
 } from "../controllers/taskController.js";
-import { protect } from "../middleware/authMiddleware.js"; // Make sure auth middleware is set
+import { protect, authorizeRoles } from "../middleware/authMiddleware.js"; // Make sure auth middleware is set
 
 const router = express.Router();
 
-router.route("/")
-  .get(protect, getTasks)
-  .post(protect, createTask);
+// Only managers can create tasks (like Jira stories)
+router.post("/", protect, authorizeRoles("manager", "admin"), createTask);
 
-router.route("/:id")
-  .put(protect, updateTask)
-  .delete(protect, deleteTask);
+// Developers/managers can view their tasks
+router.get("/", protect, getTasks);
+
+// Everyone can update their assigned tasks (logic in controller)
+router.put("/:id", protect, updateTask);
+
+// Only manager can delete tasks (optional)
+router.delete("/:id", protect, authorizeRoles("manager", "admin"), deleteTask);
+
 
 export default router;

@@ -3,9 +3,19 @@ import Task from "../models/Task.js";
 // @desc    Get all tasks for logged in user
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user.id }).sort({ createdAt: -1 });
-    res.status(200).json(tasks);
+    let tasks;
+
+    if (req.user.role === "developer") {
+      // Show only assigned tasks
+      tasks = await Task.find({ assignee: req.user._id }).populate("assignee reporter", "name email role");
+    } else {
+      // Managers/Admins see all
+      tasks = await Task.find({}).populate("assignee reporter", "name email role");
+    }
+
+    res.json(tasks);
   } catch (error) {
+    console.error("❌ Fetch tasks error:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -13,15 +23,31 @@ export const getTasks = async (req, res) => {
 // @desc    Create a new task
 export const createTask = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const {
+      title,
+      description,
+      type,
+      priority,
+      status,
+      dueDate,
+      assignee
+    } = req.body;
+
     const task = await Task.create({
       title,
       description,
-      user: req.user.id,
+      type,
+      priority,
+      status,
+      dueDate,
+      assignee,
+      reporter: req.user.id, // ✅ captured from JWT via middleware
     });
+
     res.status(201).json(task);
   } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    console.error("❌ Task creation error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
