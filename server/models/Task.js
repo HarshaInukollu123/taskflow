@@ -35,6 +35,22 @@ const taskSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    approval: {
+      status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending',
+      },
+      approvedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null,
+      },
+      rejectionReason: {
+        type: String,
+        default: '',
+      },
+    },
   },
   { timestamps: true }
 );

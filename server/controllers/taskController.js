@@ -76,3 +76,36 @@ export const deleteTask = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+export const submitTaskForApproval = async (req, res) => {
+  const task = await Task.findById(req.params.id);
+  if (!task) return res.status(404).json({ message: "Task not found" });
+
+  task.approval.status = 'pending';
+  await task.save();
+  res.json({ message: "Task submitted for approval", task });
+};
+
+
+export const approveTask = async (req, res) => {
+  const task = await Task.findById(req.params.id);
+  if (!task) return res.status(404).json({ message: "Task not found" });
+
+  task.approval.status = 'approved';
+  task.approval.approvedBy = req.user._id;
+  task.approval.rejectionReason = '';
+  await task.save();
+  res.json({ message: "Task approved", task });
+};
+
+export const rejectTask = async (req, res) => {
+  const { reason } = req.body;
+  const task = await Task.findById(req.params.id);
+  if (!task) return res.status(404).json({ message: "Task not found" });
+
+  task.approval.status = 'rejected';
+  task.approval.rejectionReason = reason || "No reason provided";
+  task.approval.approvedBy = null;
+  await task.save();
+  res.json({ message: "Task rejected", task });
+};
