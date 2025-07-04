@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import TasksPage from "./pages/TaskPage";
+import ApprovalsPage from "./pages/Approvals";
 
 
 const App = () => {

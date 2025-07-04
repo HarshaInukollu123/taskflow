@@ -15,56 +15,66 @@ const TaskList = ({ onEdit }) => {
     dispatch(deleteTask(id));
   };
 
-  if (loading) return <p>Loading tasks...</p>;
-  if (error) return <p className="text-red-600">Error: {error.message || error}</p>;
+  if (loading) return <p className="text-center text-gray-500">Loading tasks...</p>;
+  if (error) return <p className="text-center text-red-600">Error: {error.message || error}</p>;
 
   return (
-    <div className="space-y-4">
+    <div className="grid gap-6 mt-6">
       {tasks.length === 0 && (
-        <p className="text-gray-500 text-sm">No tasks found.</p>
+        <div className="text-center text-gray-400">No tasks available.</div>
       )}
 
-      {tasks.map(task => (
-        <div key={task._id} className="border p-4 rounded shadow-sm bg-white">
-          <div className="font-bold text-lg">{task.title}</div>
-          <p className="text-sm text-gray-600 mb-1">{task.description}</p>
-
-          <div className="text-sm text-gray-700">
-            <span className="font-medium">Type:</span> {task.type} |{" "}
-            <span className="font-medium">Priority:</span> {task.priority}
+      {tasks.map((task) => (
+        <div
+          key={task._id}
+          className="bg-white rounded-2xl shadow p-5 hover:shadow-lg transition duration-200"
+        >
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
+              <p className="text-sm text-gray-500 mt-1">{task.description}</p>
+            </div>
+            <div className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700 font-medium">
+              {task.status}
+            </div>
           </div>
 
-          <div className="text-sm text-gray-700">
-            <span className="font-medium">Status:</span> {task.status}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm mt-4 text-gray-600">
+            <div><span className="font-medium">Type:</span> {task.type}</div>
+            <div><span className="font-medium">Priority:</span> {task.priority}</div>
+            <div><span className="font-medium">Due:</span> {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '—'}</div>
+            <div><span className="font-medium">Assignee:</span> {task.assignee?.name || 'Unassigned'}</div>
+            <div><span className="font-medium">Reporter:</span> {task.reporter?.name || 'Unknown'}</div>
+            <div>
+              <span className="font-medium">Approval:</span>{" "}
+              <span className={
+                task.approvalStatus === 'approved' ? 'text-green-600 font-semibold'
+                : task.approvalStatus === 'rejected' ? 'text-red-600 font-semibold'
+                : 'text-yellow-600 font-semibold'
+              }>
+                {task.approvalStatus || 'pending'}
+              </span>
+            </div>
           </div>
 
-          <div className="text-sm text-gray-700">
-            <span className="font-medium">Assignee:</span>{" "}
-            {task.assignee?.name || "Unassigned"}
-          </div>
-
-          <div className="text-sm text-gray-500">
-            <span className="font-medium">Reporter:</span>{" "}
-            {task.reporter?.name || "Unknown"}
-          </div>
-
-          <div className="text-sm text-gray-500">
-            <span className="font-medium">Due Date:</span>{" "}
-            {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "—"}
-          </div>
-
-          <div className="mt-3 flex gap-3">
-            {(user?.role === "manager" || user?._id === task.assignee?._id) && (
-              <button onClick={() => onEdit(task)} className="text-blue-500 hover:underline">
+          {(user?.role === "manager" || user?._id === task.assignee?._id) && (
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => onEdit(task)}
+                className="text-indigo-600 font-medium hover:underline"
+              >
                 Edit
               </button>
-            )}
-            {user?.role === "manager" || user?.role === "admin" ? (
-              <button onClick={() => handleDelete(task._id)} className="text-red-500 hover:underline">
-                Delete
-              </button>
-            ) : null}
-          </div>
+              {(user?.role === "manager" || user?.role === "admin") && (
+                <button
+                  onClick={() => handleDelete(task._id)}
+                  className="text-red-500 font-medium hover:underline"
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          )}
         </div>
       ))}
     </div>

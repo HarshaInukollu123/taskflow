@@ -37,6 +37,31 @@ export const deleteTask = createAsyncThunk('tasks/delete', async (id, thunkAPI) 
   }
 });
 
+export const fetchPendingTasks = createAsyncThunk(
+  'tasks/fetchPending',
+  async (_, thunkAPI) => {
+    try {
+      const res = await taskAPI.getPendingTasks(); // API should return tasks with approvalStatus === 'pending'
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+export const updateApprovalStatus = createAsyncThunk(
+  'tasks/updateApprovalStatus',
+  async ({ id, approvalStatus }, thunkAPI) => {
+    try {
+      const res = await taskAPI.updateTask(id, { approvalStatus });
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+
 // Your slice code stays the same below
 const taskSlice = createSlice({
   name: 'tasks',
@@ -69,7 +94,23 @@ const taskSlice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.tasks = state.tasks.filter((task) => task._id !== action.payload);
-      });
+      })
+      .addCase(fetchPendingTasks.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchPendingTasks.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tasks = action.payload;
+      })
+      .addCase(fetchPendingTasks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateApprovalStatus.fulfilled, (state, action) => {
+        state.tasks = state.tasks.map((task) =>
+          task._id === action.payload._id ? action.payload : task
+        );
+      });    
   },
 });
 

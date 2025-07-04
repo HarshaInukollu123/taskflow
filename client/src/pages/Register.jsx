@@ -10,7 +10,7 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "developer", // Default role
+    role: "developer",
   });
 
   const navigate = useNavigate();
@@ -32,35 +32,29 @@ const Register = () => {
     navigate("/login");
   };
 
-  // useEffect(() => {
-  //   if (user) {
-  //     navigate("/dashboard");
-  //   }
-  // }, [user, navigate]);
-
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
-        {error && <p className="text-red-500 text-center">{error}</p>}
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-black">
+      <div className="w-full max-w-md p-8 rounded-2xl shadow-xl backdrop-blur-sm bg-white/10 border border-white/20 text-white">
+        <h2 className="text-3xl font-bold text-center mb-6">Create Account</h2>
+        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             name="name"
-            placeholder="Name"
+            placeholder="Full Name"
             value={userData.name}
             onChange={handleChange}
             required
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Email Address"
             value={userData.email}
             onChange={handleChange}
             required
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
           <input
             type="password"
@@ -69,7 +63,7 @@ const Register = () => {
             value={userData.password}
             onChange={handleChange}
             required
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
           <input
             type="password"
@@ -78,13 +72,13 @@ const Register = () => {
             value={userData.confirmPassword}
             onChange={handleChange}
             required
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
           <select
             name="role"
             value={userData.role}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           >
             <option value="developer">Developer</option>
             <option value="manager">Manager</option>
@@ -92,16 +86,15 @@ const Register = () => {
           </select>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
             disabled={loading}
+            className="w-full py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition duration-200 font-semibold"
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
-
-        <p className="text-sm text-center text-gray-600 mt-4">
+        <p className="text-sm text-center text-gray-400 mt-4">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <a href="/login" className="text-indigo-400 hover:underline">
             Login here
           </a>
         </p>

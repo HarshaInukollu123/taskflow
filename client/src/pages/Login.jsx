@@ -28,51 +28,40 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">Login</h2>
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-black">
+      <div className="w-full max-w-md p-8 rounded-2xl shadow-xl backdrop-blur-sm bg-white/10 border border-white/20 text-white">
+        <h2 className="text-3xl font-bold text-center mb-6">Welcome Back</h2>
+        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={handleChange}
-              className="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-200"
-              required
-            />
-          </div>
-
-          {/* Password Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={handleChange}
-              className="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-200"
-              required
-            />
-          </div>
-
-          {/* Submit Button */}
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={password}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
             disabled={loading}
+            className="w-full py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition duration-200 font-semibold"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        {/* Register Link */}
-        <p className="text-sm text-center text-gray-600 mt-4">
-          Don't have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
+        <p className="text-sm text-center text-gray-400 mt-4">
+          Don’t have an account?{" "}
+          <a href="/register" className="text-indigo-400 hover:underline">
             Register here
           </a>
         </p>
